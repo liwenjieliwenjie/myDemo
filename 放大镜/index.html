@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>放大镜</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .wrapper{
+            position:relative;
+            margin:20px;
+            width:500px;
+            height:500px;
+        }
+        .wrapper .content{
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%
+        }
+        .content .img{
+            width:100%;
+            height:100%;
+            background: url('1.jpg') no-repeat;
+        }
+        .content .move{
+            display:none;
+            position:absolute;
+            top:0;
+            left:0;
+            opacity:0.3;
+            background-color:#ccc;
+            border:1px solid #ccc;
+        }
+        .wrapper .bigImg{
+            position:absolute;
+            left:105%;
+            top:0;
+            width:500px;
+            height:500px;
+            border:1px solid black;
+            overflow:hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="img"></div>
+            <div class="move"></div>
+        </div>
+        <div class="bigImg">
+            <img src="1.jpg" alt="">
+        </div>
+    </div>
+    <script src="jquery.js"></script>
+    <script>
+        var oWrapper = $('.wrapper');
+        var oImg = $('.img');
+        var oMove = $('.move');
+        var oBigImg = $('.bigImg');
+        function bindEvent(){
+            oWrapper.on('mousemove',function(e){
+                move(e,2)
+            }).on('mouseleave',function(){
+                oMove.hide();
+                oBigImg.hide();
+            })
+        }
+        function move(event,mul){
+            var w = 500 / mul;
+            var h = 500 / mul;
+            var imgL = oImg.offset().left;
+            var imgT = oImg.offset().top;
+            var maxL = 500 - w;
+            var maxT = 500 - h;
+            var minL = 0;
+            var minT = 0;
+            var X = event.clientX - imgL - w / 2;
+            var Y = event.clientY - imgT - h / 2;
+            // if(X < minL){
+            //     X = minL;
+            // }
+            // if(Y < minT){
+            //     Y = minT
+            // }
+            // if(X > maxL){
+            //     X = maxL
+            // }
+            // if(Y > maxT){
+            //     Y = maxT
+            // }
+            var endL =(X < maxL) ? (X > minL) ? X : minL : maxL;
+            var endT =(Y < maxT) ? (Y > minT) ? Y : minT : maxT;
+            oMove.css({
+                'width' : w + 'px',
+                'height' : h + 'px',
+                'display' : 'inline-block',
+                'left' : endL + 'px',
+                'top' : endT + 'px'
+            })
+            oBigImg.css({
+                'display' : 'block'
+            }).find('img').css({
+                'width' : 500 * mul,
+                'height' : 500 * mul,
+                'margin-top' : -endT * mul + 'px',
+                'margin-left' : -endL * mul + 'px'
+            })
+        }
+        bindEvent();
+    </script>
+</body>
+</html>
